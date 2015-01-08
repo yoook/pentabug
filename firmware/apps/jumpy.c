@@ -5,7 +5,7 @@
 #include <pentabug/helper.h>
 #include <pentabug/music.h>
 
-#define SENSITIVITY_FACT		4
+#define SENSITIVITY_FACT		10
 
 static uint16_t max_sound;
 static uint8_t first;
@@ -23,7 +23,7 @@ static void run(void) {
 
 	pentatonic_all_led_set(max_sound >> 5);
 
-	if(!first && sound > max_sound / SENSITIVITY_FACT) {
+	if(!first && sound ) {
 		int8_t intensity = SENSITIVITY_FACT + 1 - max_sound / sound;
 
 		intensity = MIN(intensity, SENSITIVITY_FACT + 1);
@@ -32,7 +32,7 @@ static void run(void) {
 
 		set_note(NOTE_C, (rand() & 3) + 3);
 
-		for(size_t i = 0; i < intensity; ++i) {
+		for(int8_t i = 0; i < intensity; ++i) {
 			led_set(RIGHT, rand() & 1);
 			led_set(LEFT, rand() & 1);
 

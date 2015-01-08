@@ -33,7 +33,7 @@ uint16_t listen_measure(void) {
 
 	// collect some sound waves
 
-	wait_ms(1);
+	wait_ms(5);
 
 	// start measurement
 
