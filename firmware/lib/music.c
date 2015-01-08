@@ -29,11 +29,12 @@ void stop_note(void) {
 	stop_timer();
 }
 
-void play_melody(uint16_t notes[], size_t len, uint8_t octave, int speed) {
-	uint8_t length = 1;
-	uint8_t pause = speed / 20;
+void play_melody(uint16_t notes[], size_t len, uint8_t octave, uint16_t speed) {
+	uint16_t length = 1;
+	uint16_t pause = speed / 8;
 
 	size_t i;
+	size_t j;
 
 	for(i = 0; i < len; ++i) {
 		if(notes[i] == MLDY_PAUSE) {
@@ -44,11 +45,24 @@ void play_melody(uint16_t notes[], size_t len, uint8_t octave, int speed) {
 			// sets length for next tone
 			++i;
 			length = notes[i];
+
+		} else if(notes[i] == MLDY_OCTSHIFT_DOWN) {
+			if(octave > 0) {
+				--octave;
+			}
+		} else if(notes[i] == MLDY_OCTSHIFT_UP) {
+			++octave;
 		} else {
 			// play note
 			set_note(notes[i], octave);
 			test_stop_app();
-			wait_ms(speed * length - pause);
+			for(j = 0; j<length; j++){
+				wait_ms(speed);
+			}
+
+			// blink eyes
+			led_inv(RIGHT);
+			led_set(LEFT, !led_state(RIGHT));
 
 			// pause
 			stop_note();
@@ -56,7 +70,7 @@ void play_melody(uint16_t notes[], size_t len, uint8_t octave, int speed) {
 			wait_ms(pause);
 
 			// reset length for next note
-			length = 1;
+		//	length = 1;				//	don't reset, so less writing.
 		}
 	}
 }
